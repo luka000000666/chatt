@@ -60,7 +60,7 @@
         .product-title:hover { color: var(--primary); }
         .product-price { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
         
-        .btn { background: var(--primary); color: white; border: none; padding: 9px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; width: 100%; text-align: center; transition: background 0.2s; }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; width: 100%; text-align: center; transition: background 0.2s; }
         .btn:hover { background: var(--primary-hover); }
 
         /* المودال والنافذة المنبثقة */
@@ -68,9 +68,10 @@
         .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
 
-        /* تفاصيل المنتج */
-        .product-details-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media(min-width: 600px) { .product-details-container { grid-template-columns: 1fr 1fr; } }
+        /* خيارات الدفع المشابهة لسلة */
+        .payment-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+        .payment-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; font-size: 0.85font; transition: 0.2s; background: var(--bg-body); }
+        .payment-card.selected { border-color: var(--primary); background: #f1ecdf; font-weight: bold; color: var(--primary); }
 
         /* لوحة التحكم (Admin) */
         .admin-section { display: none; }
@@ -103,7 +104,7 @@
         <div class="header-actions">
             <button class="icon-btn" onclick="openModal('wishlistModal')" title="المفضلة"><i class="fa-solid fa-heart"></i><span class="badge" id="wishlistBadge">0</span></button>
             <button class="icon-btn" onclick="openModal('cartModal')" title="السلة"><i class="fa-solid fa-cart-shopping"></i><span class="badge" id="cartBadge">0</span></button>
-            <button class="icon-btn" onclick="toggleAdminView()" title="لوحة التحكم"><i class="fa-solid fa-gauge-high"></i></button>
+            <button class="icon-btn" onclick="checkAdminAccess()" title="لوحة التحكم (المشرف)"><i class="fa-solid fa-gauge-high"></i></button>
         </div>
     </header>
 
@@ -126,16 +127,35 @@
         <div class="products-grid" id="productsGrid"></div>
     </div>
 
-    <!-- لوحة التحكم (Admin Dashboard) -->
+    <!-- نافذة تسجيل دخول المشرف -->
+    <div class="modal" id="adminLoginModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="color:var(--text-light);">تسجيل دخول المالك (Admin)</h3>
+                <button class="close-modal" onclick="closeModal('adminLoginModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني المعتمد:</label>
+                <input type="email" id="adminEmailInput" placeholder="storesaifsaiff@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور:</label>
+                <input type="password" id="adminPassInput" placeholder="كلمة المرور">
+            </div>
+            <button class="btn" onclick="verifyAdminLogin()">دخول لوحة التحكم</button>
+        </div>
+    </div>
+
+    <!-- لوحة التحكم الحقيقية (Admin Dashboard) -->
     <div class="container admin-section" id="adminView">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2>لوحة تحكم براند إتقان</h2>
+            <h2>لوحة تحكم براند إتقان (سيف عبدالله)</h2>
             <button class="btn" style="width:auto;" onclick="switchView('store')">العودة للمتجر</button>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <h4>إجمالي المبيعات</h4>
+                <h4>إجمالي المبيعات المؤكدة</h4>
                 <p id="totalSales">0 د.إ</p>
             </div>
             <div class="stat-card">
@@ -143,13 +163,13 @@
                 <p id="totalOrders">0</p>
             </div>
             <div class="stat-card">
-                <h4>إجمالي القطع</h4>
+                <h4>إجمالي القطع في المتجر</h4>
                 <p id="totalProductsCount">0</p>
             </div>
         </div>
 
         <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:12px; margin-bottom:20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">إضافة قطعة شتوية جديدة</h3>
+            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">إضافة قطعة شتوية جديدة للمتجر</h3>
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
                 <div class="form-group"><input type="text" id="newTitle" placeholder="اسم المنتج (مثال: هودي إتقان الثقيل)"></div>
                 <div class="form-group"><input type="number" id="newPrice" placeholder="السعر (درهم)"></div>
@@ -162,43 +182,61 @@
                     </select>
                 </div>
             </div>
-            <button class="btn" style="margin-top:10px;" onclick="addNewProduct()">إضافة القطعة للمتجر</button>
+            <button class="btn" style="margin-top:10px;" onclick="addNewProduct()">إضافة القطعة للمتجر الحقيقي</button>
         </div>
 
         <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">إدارة الطلبات الواردة</h3>
+            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">سجل الطلبات الواردة (بوابة الدفع سلة)</h3>
             <table>
                 <thead>
                     <tr>
                         <th>رقم الطلب</th>
-                        <th>العميل</th>
+                        <th>اسم العميل</th>
+                        <th>طريقة الدفع</th>
                         <th>المبلغ</th>
                         <th>الحالة</th>
                     </tr>
                 </thead>
                 <tbody id="ordersTableBody">
-                    <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">لا توجد طلبات جديدة حتى الآن</td></tr>
+                    <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">لا توجد طلبات جديدة حتى الآن</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <footer>
-        جميع الحقوق محفوظة © 2026 - براند إتقان (Itqan Outerwear)
+        جميع الحقوق محفوظة © 2026 - براند إتقان (Itqan Outerwear) | المالك: سيف عبدالله
     </footer>
 
-    <!-- نافذة السلة -->
+    <!-- نافذة السلة وإتمام الطلب (بوابة الدفع) -->
     <div class="modal" id="cartModal">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="color:var(--text-light);">سلة التسوق</h3>
+                <h3 style="color:var(--text-light);">سلة التسوق والدفع</h3>
                 <button class="close-modal" onclick="closeModal('cartModal')">✕</button>
             </div>
-            <div id="cartItemsList" style="margin-bottom:15px; max-height:250px; overflow-y:auto;"></div>
-            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.05rem; margin-bottom:15px; color:var(--text-light);">
+            <div id="cartItemsList" style="margin-bottom:15px; max-height:200px; overflow-y:auto;"></div>
+            
+            <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--text-light);">اختر طريقة الدفع (بوابة سلة الإلكترونية):</h4>
+                <div class="payment-options">
+                    <div class="payment-card selected" id="payApple" onclick="selectPayment('Apple Pay')"><i class="fa-brands fa-apple-pay" style="font-size: 1.5rem;"></i><br>Apple Pay</div>
+                    <div class="payment-card" id="payCard" onclick="selectPayment(' مدى / بطاقة')"><i class="fa-solid fa-credit-card" style="font-size: 1.2rem;"></i><br>مدى / بطاقة</div>
+                    <div class="payment-card" id="payCod" onclick="selectPayment('عند الاستلام')"><i class="fa-solid fa-money-bill-wave" style="font-size: 1.2rem;"></i><br>عند الاستلام</div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+                <input type="text" id="customerName" placeholder="اسم العميل الكريم">
+            </div>
+            <div class="form-group">
+                <input type="text" id="customerPhone" placeholder="رقم الجوال للتوصيل">
+            </div>
+
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.05rem; margin: 15px 0; color:var(--text-light);">
                 <span>المجموع الكلي:</span> <span id="cartTotal" style="color:var(--primary);">0 درهم</span>
             </div>
-            <button class="btn" onclick="checkout()">إتمام الطلب وتأكيد الشراء</button>
+            <button class="btn" onclick="checkoutReal()">إتمام الدفع وتأكيد الطلب</button>
         </div>
     </div>
 
@@ -236,6 +274,7 @@
         let wishlist = [];
         let orders = [];
         let currentCategory = 'all';
+        let selectedPaymentMethod = 'Apple Pay';
 
         // عرض المنتجات
         function renderProducts(filteredList = products) {
@@ -292,7 +331,7 @@
             const p = products.find(item => item.id === id);
             if(!p) return;
             document.getElementById('productDetailsContent').innerHTML = `
-                <div class="product-details-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <img src="${p.img}" style="width:100%; height:240px; object-fit:cover; border-radius:10px;">
                     <div>
                         <h2 style="margin-bottom:10px; font-size:1.2rem; color:var(--text-light);">${p.name}</h2>
@@ -343,15 +382,33 @@
             renderCart();
         }
 
-        function checkout() {
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
+            if(method === 'Apple Pay') document.getElementById('payApple').classList.add('selected');
+            if(method === ' مدى / بطاقة') document.getElementById('payCard').classList.add('selected');
+            if(method === 'عند الاستلام') document.getElementById('payCod').classList.add('selected');
+        }
+
+        function checkoutReal() {
             if(cart.length === 0) return alert('السلة فارغة!');
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            if(!name || !phone) return alert('يرجى إدخال اسم العميل ورقم الجوال لإتمام الطلب.');
+
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             
-            // تسجيل الطلب في لوحة التحكم
-            orders.push({ id: '#' + Math.floor(1000 + Math.random() * 9000), customer: 'عميل براند إتقان', total: total + ' درهم', status: 'قيد التجهيز' });
+            // تسجيل الطلب في لوحة تحكم المالك سيف
+            orders.push({ 
+                id: '#' + Math.floor(1000 + Math.random() * 9000), 
+                customer: name + ' (' + phone + ')', 
+                payment: selectedPaymentMethod,
+                total: total + ' درهم', 
+                status: 'تم الدفع بنجاح' 
+            });
             updateAdminStats();
 
-            alert('تم إتمام الطلب بنجاح! شكراً لاختيارك إتقان.');
+            alert(`تمت عملية الدفع عبر (${selectedPaymentMethod}) بنجاح! شكراً لتسوقك من إتقان.`);
             cart = [];
             document.getElementById('cartBadge').innerText = '0';
             closeModal('cartModal');
@@ -388,23 +445,31 @@
             });
         }
 
-        // لوحة التحكم والتحكم بالعرض
+        // نظام حماية وصلاحيات المشرف المالك
+        function checkAdminAccess() {
+            openModal('adminLoginModal');
+        }
+
+        function verifyAdminLogin() {
+            const email = document.getElementById('adminEmailInput').value.trim();
+            const pass = document.getElementById('adminPassInput').value.trim();
+
+            if(email === 'storesaifsaiff@gmail.com' && pass === 'Sayofii10pP') {
+                closeModal('adminLoginModal');
+                switchView('admin');
+                alert('مرحباً بك يا سيف! تم تسجيل الدخول بصلاحيات المالك الكاملة.');
+            } else {
+                alert('خطأ في البريد الإلكتروني أو كلمة المرور للمالك!');
+            }
+        }
+
         function switchView(view) {
             if(view === 'store') {
                 document.getElementById('storeView').style.display = 'block';
                 document.getElementById('adminView').style.display = 'none';
-            }
-        }
-
-        function toggleAdminView() {
-            const store = document.getElementById('storeView');
-            const admin = document.getElementById('adminView');
-            if(admin.style.display === 'block') {
-                admin.style.display = 'none';
-                store.style.display = 'block';
-            } else {
-                store.style.display = 'none';
-                admin.style.display = 'block';
+            } else if(view === 'admin') {
+                document.getElementById('storeView').style.display = 'none';
+                document.getElementById('adminView').style.display = 'block';
                 updateAdminStats();
             }
         }
@@ -417,11 +482,11 @@
 
             if(!title || !price || !img) return alert('يرجى ملء جميع بيانات القطعة الشتوية');
 
-            const newP = { id: products.length + 1, name: title, price: price, category: category, img: img, desc: "قطعة جديدة أضيفت حديثاً لتشكيلة إتقان." };
+            const newP = { id: products.length + 1, name: title, price: price, category: category, img: img, desc: "قطعة جديدة أضيفت حديثاً لتشكيلة إتقان الفاخرة." };
             products.push(newP);
             renderProducts();
             updateAdminStats();
-            alert('تمت إضافة القطعة بنجاح إلى المتجر!');
+            alert('تمت إضافة القطعة بنجاح إلى المتجر الحقيقي!');
             document.getElementById('newTitle').value = '';
             document.getElementById('newPrice').value = '';
             document.getElementById('newImg').value = '';
@@ -434,7 +499,7 @@
             
             const tbody = document.getElementById('ordersTableBody');
             if(orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">لا توجد طلبات جديدة حتى الآن</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">لا توجد طلبات جديدة حتى الآن</td></tr>`;
                 return;
             }
             tbody.innerHTML = '';
@@ -443,8 +508,9 @@
                     <tr>
                         <td>${o.id}</td>
                         <td>${o.customer}</td>
-                        <td style="color:var(--primary);">${o.total}</td>
-                        <td><span style="background:var(--primary); color:#fff; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${o.status}</span></td>
+                        <td>${o.payment}</td>
+                        <td style="color:var(--primary); font-weight:bold;">${o.total}</td>
+                        <td><span style="background:var(--success); color:#fff; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${o.status}</span></td>
                     </tr>
                 `;
             });
