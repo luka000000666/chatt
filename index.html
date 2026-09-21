@@ -234,7 +234,7 @@
                 <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--text-light);">اختر طريقة الدفع (بوابة سلة الإلكترونية):</h4>
                 <div class="payment-options">
                     <div class="payment-card selected" id="payApple" onclick="selectPayment('Apple Pay')"><i class="fa-brands fa-apple-pay" style="font-size: 1.5rem;"></i><br>Apple Pay</div>
-                    <div class="payment-card" id="payCard" onclick="selectPayment(' مدى / بطاقة')"><i class="fa-solid fa-credit-card" style="font-size: 1.2rem;"></i><br>مدى / بطاقة</div>
+                    <div class="payment-card" id="payCard" onclick="selectPayment('مدى / بطاقة')"><i class="fa-solid fa-credit-card" style="font-size: 1.2rem;"></i><br>مدى / بطاقة</div>
                     <div class="payment-card" id="payCod" onclick="selectPayment('عند الاستلام')"><i class="fa-solid fa-money-bill-wave" style="font-size: 1.2rem;"></i><br>عند الاستلام</div>
                 </div>
             </div>
@@ -283,11 +283,11 @@
         let cart = [];
         let wishlist = [];
         let orders = [];
-        let usersList = []; // تخزين الحسابات المسجلة
-        let currentUser = null; // المستخدم الحالي المسجل دخول
+        let usersList = []; 
+        let currentUser = null; 
         let currentCategory = 'all';
         let selectedPaymentMethod = 'Apple Pay';
-        let isRegistering = false; // هل واجهة تسجيل حساب أم دخول؟
+        let isRegistering = false;
 
         // عرض المنتجات
         function renderProducts(filteredList = products) {
@@ -472,7 +472,7 @@
             selectedPaymentMethod = method;
             document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
             if(method === 'Apple Pay') document.getElementById('payApple').classList.add('selected');
-            if(method === ' مدى / بطاقة') document.getElementById('payCard').classList.add('selected');
+            if(method === 'مدى / بطاقة') document.getElementById('payCard').classList.add('selected');
             if(method === 'عند الاستلام') document.getElementById('payCod').classList.add('selected');
         }
 
@@ -490,12 +490,12 @@
 
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             
-            // تسجيل الطلب في لوحة تحكم المالك سيف
+            // تسجيل الطلب في لوحة تحكم المالك
             orders.push({ 
                 id: '#' + Math.floor(1000 + Math.random() * 9000), 
                 customer: currentUser.name + ' (' + phone + ')', 
                 payment: selectedPaymentMethod,
-                total: total + ' درهم', 
+                total: total + ' د.إ', 
                 status: 'تم الدفع بنجاح' 
             });
             updateAdminStats();
