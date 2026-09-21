@@ -25,15 +25,18 @@
         /* الهيدر */
         header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 8px; letter-spacing: 1px; }
-        .search-bar { flex: 0 1 400px; display: flex; background: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .search-bar { flex: 0 1 350px; display: flex; background: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
         .search-bar input { width: 100%; padding: 8px 12px; background: none; border: none; color: var(--text-light); outline: none; font-size: 0.9rem; }
         .search-bar input::placeholder { color: var(--text-muted); }
         .search-bar button { background: none; border: none; color: var(--text-muted); padding: 0 12px; cursor: pointer; }
         
-        .header-actions { display: flex; gap: 12px; align-items: center; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
         .icon-btn { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-light); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; transition: 0.2s; }
         .icon-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
         .badge { position: absolute; top: -3px; right: -3px; background: var(--primary); color: #fff; font-size: 0.7rem; font-weight: bold; border-radius: 50%; padding: 2px 6px; }
+
+        .user-auth-btn { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-light); padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .user-auth-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
 
         /* المحتوى العام */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; width: 100%; flex: 1; }
@@ -70,7 +73,7 @@
 
         /* خيارات الدفع المشابهة لسلة */
         .payment-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-        .payment-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; font-size: 0.85font; transition: 0.2s; background: var(--bg-body); }
+        .payment-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; font-size: 0.85rem; transition: 0.2s; background: var(--bg-body); }
         .payment-card.selected { border-color: var(--primary); background: #f1ecdf; font-weight: bold; color: var(--primary); }
 
         /* لوحة التحكم (Admin) */
@@ -104,7 +107,8 @@
         <div class="header-actions">
             <button class="icon-btn" onclick="openModal('wishlistModal')" title="المفضلة"><i class="fa-solid fa-heart"></i><span class="badge" id="wishlistBadge">0</span></button>
             <button class="icon-btn" onclick="openModal('cartModal')" title="السلة"><i class="fa-solid fa-cart-shopping"></i><span class="badge" id="cartBadge">0</span></button>
-            <button class="icon-btn" onclick="checkAdminAccess()" title="لوحة التحكم (المشرف)"><i class="fa-solid fa-gauge-high"></i></button>
+            <button class="user-auth-btn" id="userAuthBtn" onclick="handleAuthClick()">تسجيل الدخول</button>
+            <button class="icon-btn" id="adminDashboardBtn" style="display:none;" onclick="switchView('admin')" title="لوحة التحكم (المالك)"><i class="fa-solid fa-gauge-high"></i></button>
         </div>
     </header>
 
@@ -127,29 +131,38 @@
         <div class="products-grid" id="productsGrid"></div>
     </div>
 
-    <!-- نافذة تسجيل دخول المشرف -->
-    <div class="modal" id="adminLoginModal">
+    <!-- نافذة تسجيل الدخول / إنشاء حساب للعملاء -->
+    <div class="modal" id="authModal">
         <div class="modal-content" style="max-width: 400px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="color:var(--text-light);">تسجيل دخول المالك (Admin)</h3>
-                <button class="close-modal" onclick="closeModal('adminLoginModal')">✕</button>
+                <h3 id="authModalTitle" style="color:var(--text-light);">تسجيل الدخول لمتجر إتقان</h3>
+                <button class="close-modal" onclick="closeModal('authModal')">✕</button>
+            </div>
+            <div id="registerFields" style="display:none;">
+                <div class="form-group">
+                    <label>الاسم الكامل:</label>
+                    <input type="text" id="regName" placeholder="اسمك الكريم">
+                </div>
             </div>
             <div class="form-group">
-                <label>البريد الإلكتروني المعتمد:</label>
-                <input type="email" id="adminEmailInput" placeholder="storesaifsaiff@gmail.com">
+                <label>البريد الإلكتروني:</label>
+                <input type="email" id="authEmail" placeholder="example@gmail.com">
             </div>
             <div class="form-group">
                 <label>كلمة المرور:</label>
-                <input type="password" id="adminPassInput" placeholder="كلمة المرور">
+                <input type="password" id="authPass" placeholder="كلمة المرور">
             </div>
-            <button class="btn" onclick="verifyAdminLogin()">دخول لوحة التحكم</button>
+            <button class="btn" id="authSubmitBtn" onclick="submitAuth()">تسجيل الدخول</button>
+            <div style="text-align:center; margin-top:12px;">
+                <span id="authToggleText" style="font-size:0.85rem; color:var(--text-muted); cursor:pointer;" onclick="toggleAuthMode()">ليس لديك حساب؟ اضغط هنا لإنشاء حساب جديد</span>
+            </div>
         </div>
     </div>
 
-    <!-- لوحة التحكم الحقيقية (Admin Dashboard) -->
+    <!-- لوحة التحكم الخاصة بالمالك (Admin Dashboard) -->
     <div class="container admin-section" id="adminView">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2>لوحة تحكم براند إتقان (سيف عبدالله)</h2>
+            <h2>لوحة تحكم المالك - براند إتقان (سيف عبدالله)</h2>
             <button class="btn" style="width:auto;" onclick="switchView('store')">العودة للمتجر</button>
         </div>
 
@@ -227,9 +240,6 @@
             </div>
 
             <div class="form-group" style="margin-top: 10px;">
-                <input type="text" id="customerName" placeholder="اسم العميل الكريم">
-            </div>
-            <div class="form-group">
                 <input type="text" id="customerPhone" placeholder="رقم الجوال للتوصيل">
             </div>
 
@@ -273,8 +283,11 @@
         let cart = [];
         let wishlist = [];
         let orders = [];
+        let usersList = []; // تخزين الحسابات المسجلة
+        let currentUser = null; // المستخدم الحالي المسجل دخول
         let currentCategory = 'all';
         let selectedPaymentMethod = 'Apple Pay';
+        let isRegistering = false; // هل واجهة تسجيل حساب أم دخول؟
 
         // عرض المنتجات
         function renderProducts(filteredList = products) {
@@ -344,6 +357,79 @@
             openModal('productModal');
         }
 
+        // نظام الحسابات وتسجيل الدخول
+        function handleAuthClick() {
+            if(currentUser) {
+                if(confirm(`أنت مسجل باسم (${currentUser.name}). هل تريد تسجيل الخروج؟`)) {
+                    currentUser = null;
+                    document.getElementById('userAuthBtn').innerText = 'تسجيل الدخول';
+                    document.getElementById('adminDashboardBtn').style.display = 'none';
+                    switchView('store');
+                    alert('تم تسجيل الخروج بنجاح.');
+                }
+            } else {
+                openModal('authModal');
+            }
+        }
+
+        function toggleAuthMode() {
+            isRegistering = !isRegistering;
+            const regFields = document.getElementById('registerFields');
+            const title = document.getElementById('authModalTitle');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const toggleText = document.getElementById('authToggleText');
+
+            if(isRegistering) {
+                regFields.style.display = 'block';
+                title.innerText = 'إنشاء حساب جديد في إتقان';
+                submitBtn.innerText = 'إنشاء الحساب';
+                toggleText.innerText = 'لديك حساب بالفعل؟ اضغط هنا لتسجيل الدخول';
+            } else {
+                regFields.style.display = 'none';
+                title.innerText = 'تسجيل الدخول لمتجر إتقان';
+                submitBtn.innerText = 'تسجيل الدخول';
+                toggleText.innerText = 'ليس لديك حساب؟ اضغط هنا لإنشاء حساب جديد';
+            }
+        }
+
+        function submitAuth() {
+            const email = document.getElementById('authEmail').value.trim();
+            const pass = document.getElementById('authPass').value.trim();
+
+            if(!email || !pass) return alert('يرجى ملء جميع الحقول المطلوبة!');
+
+            // التحقق إذا كان المالك (سيف) يسجل بحسابه الخاص
+            if(email === 'storesaifsaiff@gmail.com' && pass === 'Sayofii10pP') {
+                currentUser = { name: 'سيف عبدالله (المالك)', email: email, isAdmin: true };
+                document.getElementById('userAuthBtn').innerText = 'حسابي (المالك)';
+                document.getElementById('adminDashboardBtn').style.display = 'flex';
+                closeModal('authModal');
+                alert('مرحباً بك يا سيف! تم تسجيل الدخول بصلاحيات المالك الكاملة.');
+                return;
+            }
+
+            if(isRegistering) {
+                const name = document.getElementById('regName').value.trim();
+                if(!name) return alert('يرجى إدخال اسمك الكريم!');
+                
+                const existing = usersList.find(u => u.email === email);
+                if(existing) return alert('هذا البريد الإلكتروني مسجل مسبقاً!');
+
+                const newUser = { name: name, email: email, pass: pass, isAdmin: false };
+                usersList.push(newUser);
+                currentUser = newUser;
+                alert('تم إنشاء الحساب وتسجيل الدخول بنجاح!');
+            } else {
+                const user = usersList.find(u => u.email === email && u.pass === pass);
+                if(!user) return alert('البريد الإلكتروني أو كلمة المرور غير صحيحة!');
+                currentUser = user;
+                alert(`أهلاً بك مجدداً يا ${currentUser.name}!`);
+            }
+
+            document.getElementById('userAuthBtn').innerText = currentUser.name;
+            closeModal('authModal');
+        }
+
         // السلة
         function addToCart(id) {
             const product = products.find(p => p.id === id);
@@ -392,23 +478,29 @@
 
         function checkoutReal() {
             if(cart.length === 0) return alert('السلة فارغة!');
-            const name = document.getElementById('customerName').value;
-            const phone = document.getElementById('customerPhone').value;
-            if(!name || !phone) return alert('يرجى إدخال اسم العميل ورقم الجوال لإتمام الطلب.');
+            if(!currentUser) {
+                alert('يرجى تسجيل الدخول أولاً لإتمام الطلب.');
+                closeModal('cartModal');
+                openModal('authModal');
+                return;
+            }
+
+            const phone = document.getElementById('customerPhone').value.trim();
+            if(!phone) return alert('يرجى إدخال رقم الجوال للتوصيل.');
 
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             
             // تسجيل الطلب في لوحة تحكم المالك سيف
             orders.push({ 
                 id: '#' + Math.floor(1000 + Math.random() * 9000), 
-                customer: name + ' (' + phone + ')', 
+                customer: currentUser.name + ' (' + phone + ')', 
                 payment: selectedPaymentMethod,
                 total: total + ' درهم', 
                 status: 'تم الدفع بنجاح' 
             });
             updateAdminStats();
 
-            alert(`تمت عملية الدفع عبر (${selectedPaymentMethod}) بنجاح! شكراً لتسوقك من إتقان.`);
+            alert(`تمت عملية الدفع عبر (${selectedPaymentMethod}) بنجاح يا ${currentUser.name}! شكراً لتسوقك من إتقان.`);
             cart = [];
             document.getElementById('cartBadge').innerText = '0';
             closeModal('cartModal');
@@ -445,29 +537,16 @@
             });
         }
 
-        // نظام حماية وصلاحيات المشرف المالك
-        function checkAdminAccess() {
-            openModal('adminLoginModal');
-        }
-
-        function verifyAdminLogin() {
-            const email = document.getElementById('adminEmailInput').value.trim();
-            const pass = document.getElementById('adminPassInput').value.trim();
-
-            if(email === 'storesaifsaiff@gmail.com' && pass === 'Sayofii10pP') {
-                closeModal('adminLoginModal');
-                switchView('admin');
-                alert('مرحباً بك يا سيف! تم تسجيل الدخول بصلاحيات المالك الكاملة.');
-            } else {
-                alert('خطأ في البريد الإلكتروني أو كلمة المرور للمالك!');
-            }
-        }
-
+        // التنقل بين واجهة المتجر ولوحة التحكم
         function switchView(view) {
             if(view === 'store') {
                 document.getElementById('storeView').style.display = 'block';
                 document.getElementById('adminView').style.display = 'none';
             } else if(view === 'admin') {
+                if(!currentUser || !currentUser.isAdmin) {
+                    alert('عذراً، هذه الصفحة مخصصة لمالك المتجر (سيف) فقط!');
+                    return;
+                }
                 document.getElementById('storeView').style.display = 'none';
                 document.getElementById('adminView').style.display = 'block';
                 updateAdminStats();
