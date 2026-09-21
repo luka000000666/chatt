@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجري الاحترافي المتكامل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #f59e0b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+
+        header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--primary); cursor: pointer; }
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+        
+        .icon-btn { background: var(--border); border: none; color: var(--text-light); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; transition: 0.2s; }
+        .icon-btn:hover { background: var(--primary); }
+        .badge { position: absolute; top: -3px; right: -3px; background: var(--accent); color: #000; font-size: 0.7rem; font-weight: bold; border-radius: 50%; padding: 2px 6px; }
+
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; width: 100%; flex: 1; }
+        .hero { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); padding: 30px; border-radius: 16px; margin-bottom: 25px; text-align: center; }
+        .hero h2 { font-size: 1.8rem; margin-bottom: 8px; }
+        .hero p { font-size: 0.95rem; opacity: 0.9; }
+
+        .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; border-right: 4px solid var(--primary); padding-right: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        @media(min-width: 768px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+
+        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
+        .product-card:hover { transform: translateY(-4px); }
+        .product-img { width: 100%; height: 160px; object-fit: cover; background: #2a3441; }
+        .product-info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .product-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+        .product-price { font-size: 1rem; font-weight: 800; color: var(--accent); margin-bottom: 10px; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; width: 100%; text-align: center; transition: background 0.2s; }
+        .btn:hover { background: var(--primary-hover); }
+
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 300; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
+        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+
+        .form-group { margin-bottom: 12px; text-align: right; }
+        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-muted); }
+        .form-group input, .form-group select { width: 100%; padding: 10px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 0.9rem; outline: none; }
+
+        footer { background: var(--card-bg); border-top: 1px solid var(--border); padding: 20px; text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="logo" onclick="resetView()">متجري الاحترافي</h1>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="openModal('cartModal')"><i class="fa-solid fa-cart-shopping"></i><span class="badge" id="cartBadge">0</span></button>
+            <button class="icon-btn" onclick="openModal('profileModal')"><i class="fa-solid fa-user"></i></button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h2>أهلاً بك في متجرك الرقمي</h2>
+            <p>تسوق أحدث المنتجات والتقنيات بأفضل الأسعار وبكل سهولة وأمان.</p>
+        </div>
+
+        <div class="section-title">المنتجات المتاحة</div>
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <footer>
+        جميع الحقوق محفوظة © 2026 - تم الإنشاء خصيصاً لك
+    </footer>
+
+    <!-- نافذة السلة -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3>سلة الشراء</h3>
+                <button class="close-modal" onclick="closeModal('cartModal')">✕</button>
+            </div>
+            <div id="cartItemsList" style="margin-bottom:15px;"></div>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.05rem; margin-bottom:15px;">
+                <span>المجموع:</span> <span id="cartTotal" style="color:var(--accent);">0 درهم</span>
+            </div>
+            <button class="btn" onclick="checkout()">إتمام الطلب الآن</button>
+        </div>
+    </div>
+
+    <!-- نافذة الحساب -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3>حساب المستخدم</h3>
+                <button class="close-modal" onclick="closeModal('profileModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email5" id="userEmail" placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="userPass" placeholder="••••••••">
+            </div>
+            <button class="btn" onclick="login()">تسجيل الدخول</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        const products = [
+            { id: 1, name: "سماعات رأس لاسلكية احترافية", price: 250, img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" },
+            { id: 2, name: "ساعة ألعاب ذكية متطورة", price: 450, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" },
+            { id: 3, name: "ماوس ألعاب لاسلكي ميكانيكي", price: 180, img: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500" },
+            { id: 4, name: "لوحة مفاتيح ميكانيكية بإضاءة RGB", price: 320, img: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500" }
+        ];
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.img}" class="product-img">
+                        <div class="product-info">
+                            <div>
+                                <div class="product-title">${p.name}</div>
+                                <div class="product-price">${p.price} درهم</div>
+                            </div>
+                            <button class="btn" onclick="addToCart(${p.id})">إضافة للسلة</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            document.getElementById('cartBadge').innerText = cart.length;
+            alert('تمت إضافة المنتج إلى السلة بنجاح!');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+            if(id === 'cartModal') renderCart();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cartItemsList');
+            if(cart.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-muted); text-align:center;">السلة فارغة حالياً</p>';
+                document.getElementById('cartTotal').innerText = '0 درهم';
+                return;
+            }
+            list.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                list.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-body); padding:8px 12px; border-radius:8px; margin-bottom:8px; font-size:0.85rem;">
+                        <span>${item.name}</span>
+                        <span style="color:var(--accent); font-weight:bold;">${item.price} د.إ</span>
+                    </div>
+                `;
+            });
+            document.getElementById('cartTotal').innerText = total + ' درهم';
+        }
+
+        function checkout() {
+            if(cart.length === 0) return alert('السلة فارغة!');
+            alert('تم إرسال طلبك بنجاح! شكراً لتسوقك معنا.');
+            cart = [];
+            document.getElementById('cartBadge').innerText = '0';
+            closeModal('cartModal');
+        }
+
+        function login() {
+            const email = document.getElementById('userEmail').value;
+            if(!email) return alert('يرجى إدخال البريد الإلكتروني');
+            alert('أهلاً بك، تم تسجيل الدخول بنجاح!');
+            closeModal('profileModal');
+        }
+
+        window.onload = renderProducts;
+    </script>
+</body>
+</html>
