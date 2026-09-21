@@ -17,10 +17,16 @@
             --border: #e6dfd5;          /* إطار ناعم ومتناسق */
             --danger: #dc2626;          /* أحمر للحذف */
             --success: #16a34a;         /* أخضر للنجاح */
+            --info: #3498db;            /* أزرق للحالة */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* بانر العروض المتحرك */
+        .promo-banner { background: linear-gradient(135deg, #b89778, #8c7a6b); color: white; text-align: center; padding: 10px; font-weight: bold; font-size: 0.9rem; overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--border); }
+        .promo-banner span { display: inline-block; animation: marquee 22s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         /* الهيدر */
         header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
@@ -57,11 +63,11 @@
 
         .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, box-shadow 0.2s; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
-        .product-img { width: 100%; height: 180px; object-fit: cover; background: #eee; cursor: pointer; }
+        .product-img { width: 100%; height: 160px; object-fit: cover; background: #eee; cursor: pointer; }
         .product-info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .product-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; cursor: pointer; color: var(--text-light); }
         .product-title:hover { color: var(--primary); }
-        .product-price { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+        .product-price { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
         
         .btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; width: 100%; text-align: center; transition: background 0.2s; }
         .btn:hover { background: var(--primary-hover); }
@@ -97,6 +103,11 @@
 </head>
 <body>
 
+    <!-- بانر العروض الكبرى -->
+    <div class="promo-banner">
+        <span>🔥 عروض الشتاء الكبرى في متجر إتقان: خصم 20% على جميع المعاطف والهوديات لفترة محدودة! | توصيل سريع لجميع مناطق الإمارات 🇦🇪</span>
+    </div>
+
     <!-- الهيدر -->
     <header>
         <h1 class="logo" onclick="switchView('store')"><i class="fa-solid fa-shirt"></i> إتــقــان</h1>
@@ -107,6 +118,7 @@
         <div class="header-actions">
             <button class="icon-btn" onclick="openModal('wishlistModal')" title="المفضلة"><i class="fa-solid fa-heart"></i><span class="badge" id="wishlistBadge">0</span></button>
             <button class="icon-btn" onclick="openModal('cartModal')" title="السلة"><i class="fa-solid fa-cart-shopping"></i><span class="badge" id="cartBadge">0</span></button>
+            <button class="icon-btn" onclick="openModal('profileModal')" title="الملف الشخصي وسجل الطلبات" style="display:none;" id="profileIconBtn"><i class="fa-solid fa-user-gear"></i></button>
             <button class="user-auth-btn" id="userAuthBtn" onclick="handleAuthClick()">تسجيل الدخول</button>
             <button class="icon-btn" id="adminDashboardBtn" style="display:none;" onclick="switchView('admin')" title="لوحة التحكم (المالك)"><i class="fa-solid fa-gauge-high"></i></button>
         </div>
@@ -159,6 +171,41 @@
         </div>
     </div>
 
+    <!-- نافذة الملف الشخصي وسجل الطلبات -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content" style="max-width: 650px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="color:var(--text-light);">الملف الشخصي وسجل الطلبات</h3>
+                <button class="close-modal" onclick="closeModal('profileModal')">✕</button>
+            </div>
+            
+            <div style="background:var(--bg-body); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border);">
+                <h4 style="font-size:0.9rem; margin-bottom:10px; color:var(--primary);">بيانات العميل وعنوان الشحن</h4>
+                <div class="form-group"><input type="text" id="userFullName" placeholder="الاسم الكامل"></div>
+                <div class="form-group"><input type="text" id="userPhone" placeholder="رقم الجوال للتوصيل"></div>
+                <div class="form-group"><textarea id="userAddress" placeholder="عنوان الشحن بالتفصيل (المدينة، الحي، الشارع)"></textarea></div>
+                <button class="btn" style="padding:8px;" onclick="saveUserProfile()">حفظ العنوان والبيانات</button>
+            </div>
+
+            <h4 style="font-size:0.9rem; margin-bottom:8px; color:var(--text-light);">طلباتي السابقة وحالتها:</h4>
+            <div style="max-height: 180px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>المبلغ</th>
+                            <th>طريقة الدفع</th>
+                            <th>حالة الطلب</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientOrdersBody">
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">لا توجد طلبات سابقة مسجلة</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- لوحة التحكم الخاصة بالمالك (Admin Dashboard) -->
     <div class="container admin-section" id="adminView">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -199,7 +246,7 @@
         </div>
 
         <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">سجل الطلبات الواردة (بوابة الدفع سلة)</h3>
+            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">سجل الطلبات الواردة وإدارة الحالات</h3>
             <table>
                 <thead>
                     <tr>
@@ -207,7 +254,7 @@
                         <th>اسم العميل</th>
                         <th>طريقة الدفع</th>
                         <th>المبلغ</th>
-                        <th>الحالة</th>
+                        <th>الحالة / التحكم</th>
                     </tr>
                 </thead>
                 <tbody id="ordersTableBody">
@@ -239,10 +286,6 @@
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 10px;">
-                <input type="text" id="customerPhone" placeholder="رقم الجوال للتوصيل">
-            </div>
-
             <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.05rem; margin: 15px 0; color:var(--text-light);">
                 <span>المجموع الكلي:</span> <span id="cartTotal" style="color:var(--primary);">0 درهم</span>
             </div>
@@ -261,7 +304,7 @@
         </div>
     </div>
 
-    <!-- نافذة تفاصيل المنتج -->
+    <!-- نافذة تفاصيل المنتج مع المقاسات والألوان -->
     <div class="modal" id="productModal">
         <div class="modal-content" style="max-width:700px;">
             <div style="display:flex; justify-content:flex-end; margin-bottom:5px;">
@@ -272,7 +315,6 @@
     </div>
 
     <script>
-        // قاعدة البيانات الأولية الخاصة ببراند إتقان للأوتروير
         let products = [
             { id: 1, name: "هودي إتقان الثقيل - أبيض ناصع", price: 290, category: "hoodies", img: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500", desc: "هودي شتوي فائق النعومة بتصميم أوتروير عصري وتفاصيل مطرزة بدقة." },
             { id: 2, name: "معطف إتقان الطويل المبطن - بيج", price: 580, category: "jackets", img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500", desc: "معطف شتوي فاخر مصمم خصيصاً ليمنحك الدفء الكامل مع إطلالة راقية." },
@@ -312,7 +354,7 @@
                                 <div class="product-title" onclick="openProductDetails(${p.id})">${p.name}</div>
                                 <div class="product-price">${p.price} درهم</div>
                             </div>
-                            <button class="btn" onclick="addToCart(${p.id})">إضافة للسلة</button>
+                            <button class="btn" onclick="openProductDetails(${p.id})">اختر المقاس والسلة</button>
                         </div>
                     </div>
                 `;
@@ -339,22 +381,59 @@
             renderProducts(result);
         }
 
-        // تفاصيل المنتج المنبثقة
+        // تفاصيل المنتج مع خيارات الألوان والمقاسات
         function openProductDetails(id) {
             const p = products.find(item => item.id === id);
             if(!p) return;
             document.getElementById('productDetailsContent').innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items:center;">
                     <img src="${p.img}" style="width:100%; height:240px; object-fit:cover; border-radius:10px;">
                     <div>
-                        <h2 style="margin-bottom:10px; font-size:1.2rem; color:var(--text-light);">${p.name}</h2>
-                        <div style="color:var(--primary); font-weight:bold; font-size:1.2rem; margin-bottom:10px;">${p.price} درهم</div>
-                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">${p.desc}</p>
-                        <button class="btn" onclick="addToCart(${p.id}); closeModal('productModal');">إضافة للسلة الآن</button>
+                        <h2 style="margin-bottom:8px; font-size:1.1rem; color:var(--text-light);">${p.name}</h2>
+                        <div style="color:var(--primary); font-weight:bold; font-size:1.1rem; margin-bottom:8px;">${p.price} درهم</div>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">${p.desc}</p>
+                        
+                        <div style="margin: 6px 0;">
+                            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">اللون:</label>
+                            <select id="selectedColor-${p.id}" style="width:100%; padding:6px; font-size:0.8rem; border-radius:6px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-light);">
+                                <option value="أسود">أسود</option>
+                                <option value="بيج">بيج</option>
+                                <option value="أبيض">أبيض</option>
+                                <option value="كحلي">كحلي</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 6px 0 12px 0;">
+                            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">المقاس:</label>
+                            <select id="selectedSize-${p.id}" style="width:100%; padding:6px; font-size:0.8rem; border-radius:6px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-light);">
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L" selected>L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
+                        </div>
+
+                        <button class="btn" onclick="addToCartWithOptions(${p.id}); closeModal('productModal');">إضافة للسلة</button>
                     </div>
                 </div>
             `;
             openModal('productModal');
+        }
+
+        // إضافة المنتج مع المقاس واللون المختار للسلة
+        function addToCartWithOptions(id) {
+            const product = products.find(p => p.id === id);
+            const color = document.getElementById(`selectedColor-${id}`).value;
+            const size = document.getElementById(`selectedSize-${id}`).value;
+            
+            cart.push({
+                ...product,
+                selectedColor: color,
+                selectedSize: size
+            });
+            document.getElementById('cartBadge').innerText = cart.length;
+            alert(`تمت إضافة (${product.name}) - [اللون: ${color}، المقاس: ${size}] إلى السلة بنجاح!`);
         }
 
         // نظام الحسابات وتسجيل الدخول
@@ -364,6 +443,7 @@
                     currentUser = null;
                     document.getElementById('userAuthBtn').innerText = 'تسجيل الدخول';
                     document.getElementById('adminDashboardBtn').style.display = 'none';
+                    document.getElementById('profileIconBtn').style.display = 'none';
                     switchView('store');
                     alert('تم تسجيل الخروج بنجاح.');
                 }
@@ -398,13 +478,13 @@
 
             if(!email || !pass) return alert('يرجى ملء جميع الحقول المطلوبة!');
 
-            // التحقق إذا كان المالك (سيف) يسجل بحسابه الخاص
             if(email === 'storesaifsaiff@gmail.com' && pass === 'Sayofii10pP') {
-                currentUser = { name: 'سيف عبدالله (المالك)', email: email, isAdmin: true };
+                currentUser = { name: 'سيف عبدالله (المالك)', email: email, phone: '0501234567', address: 'الإمارات العربية المتحدة', isAdmin: true };
                 document.getElementById('userAuthBtn').innerText = 'حسابي (المالك)';
                 document.getElementById('adminDashboardBtn').style.display = 'flex';
+                document.getElementById('profileIconBtn').style.display = 'flex';
                 closeModal('authModal');
-                alert('مرحباً بك يا سيف! تم تسجيل الدخول بصلاحيات المالك الكاملة.');
+                alert('مرحباً بك يا سيف! تم تسجيل الدخول بصلاحيات المالك.');
                 return;
             }
 
@@ -415,7 +495,7 @@
                 const existing = usersList.find(u => u.email === email);
                 if(existing) return alert('هذا البريد الإلكتروني مسجل مسبقاً!');
 
-                const newUser = { name: name, email: email, pass: pass, isAdmin: false };
+                const newUser = { name: name, email: email, pass: pass, phone: '', address: '', isAdmin: false };
                 usersList.push(newUser);
                 currentUser = newUser;
                 alert('تم إنشاء الحساب وتسجيل الدخول بنجاح!');
@@ -427,17 +507,29 @@
             }
 
             document.getElementById('userAuthBtn').innerText = currentUser.name;
+            document.getElementById('profileIconBtn').style.display = 'flex';
+            
+            // تعبئة حقول الملف الشخصي إن وجدت
+            document.getElementById('userFullName').value = currentUser.name;
+            document.getElementById('userPhone').value = currentUser.phone || '';
+            document.getElementById('userAddress').value = currentUser.address || '';
+            
             closeModal('authModal');
         }
 
-        // السلة
-        function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            cart.push(product);
-            document.getElementById('cartBadge').innerText = cart.length;
-            alert('تمت إضافة القطعة إلى السلة بنجاح!');
+        // حفظ بيانات الملف الشخصي وعنوان الشحن للعميل
+        function saveUserProfile() {
+            if(!currentUser) return;
+            currentUser.name = document.getElementById('userFullName').value.trim();
+            currentUser.phone = document.getElementById('userPhone').value.trim();
+            currentUser.address = document.getElementById('userAddress').value.trim();
+            
+            document.getElementById('userAuthBtn').innerText = currentUser.name;
+            alert('تم حفظ بيانات العنوان والشحن بنجاح!');
+            closeModal('profileModal');
         }
 
+        // السلة
         function renderCart() {
             const list = document.getElementById('cartItemsList');
             if(cart.length === 0) {
@@ -451,7 +543,10 @@
                 total += item.price;
                 list.innerHTML += `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-body); padding:8px 12px; border-radius:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border);">
-                        <span style="color:var(--text-light);">${item.name}</span>
+                        <div>
+                            <span style="color:var(--text-light); font-weight:bold;">${item.name}</span><br>
+                            <span style="color:var(--text-muted); font-size:0.75rem;">اللون: ${item.selectedColor} | المقاس: ${item.selectedSize}</span>
+                        </div>
                         <div style="display:flex; gap:10px; align-items:center;">
                             <span style="color:var(--primary); font-weight:bold;">${item.price} د.إ</span>
                             <button onclick="removeFromCart(${index})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
@@ -485,25 +580,52 @@
                 return;
             }
 
-            const phone = document.getElementById('customerPhone').value.trim();
-            if(!phone) return alert('يرجى إدخال رقم الجوال للتوصيل.');
+            if(!currentUser.phone || !currentUser.address) {
+                alert('يرجى إكمال بيانات العنوان ورقم الجوال في الملف الشخصي قبل تأكيد الطلب.');
+                closeModal('cartModal');
+                openModal('profileModal');
+                return;
+            }
 
             let total = cart.reduce((sum, item) => sum + item.price, 0);
+            const orderId = '#' + Math.floor(1000 + Math.random() * 9000);
             
-            // تسجيل الطلب في لوحة تحكم المالك
-            orders.push({ 
-                id: '#' + Math.floor(1000 + Math.random() * 9000), 
-                customer: currentUser.name + ' (' + phone + ')', 
+            // تسجيل الطلب
+            const newOrder = { 
+                id: orderId, 
+                customer: currentUser.name + ' (' + currentUser.phone + ')', 
                 payment: selectedPaymentMethod,
-                total: total + ' د.إ', 
+                total: total + ' درهم', 
                 status: 'تم الدفع بنجاح' 
-            });
+            };
+            orders.push(newOrder);
             updateAdminStats();
+            renderClientOrders();
 
-            alert(`تمت عملية الدفع عبر (${selectedPaymentMethod}) بنجاح يا ${currentUser.name}! شكراً لتسوقك من إتقان.`);
+            alert(`تمت عملية الدفع بنجاح يا ${currentUser.name}! رقم طلبك هو ${orderId}`);
             cart = [];
             document.getElementById('cartBadge').innerText = '0';
             closeModal('cartModal');
+        }
+
+        // عرض سجل طلبات العميل داخل نافذة الملف الشخصي
+        function renderClientOrders() {
+            const tbody = document.getElementById('clientOrdersBody');
+            if(orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">لا توجد طلبات سابقة مسجلة</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            orders.forEach(o => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${o.id}</td>
+                        <td>${o.total}</td>
+                        <td>${o.payment}</td>
+                        <td><span style="background:var(--success); color:#fff; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${o.status}</span></td>
+                    </tr>
+                `;
+            });
         }
 
         // المفضلة
@@ -537,7 +659,13 @@
             });
         }
 
-        // التنقل بين واجهة المتجر ولوحة التحكم
+        // لوحة التحكم وتحديث حالة الطلبات من قِبل المالك
+        function updateOrderStatusAdmin(index, newStatus) {
+            orders[index].status = newStatus;
+            updateAdminStats();
+            alert('تم تحديث حالة الطلب بنجاح إلى: ' + newStatus);
+        }
+
         function switchView(view) {
             if(view === 'store') {
                 document.getElementById('storeView').style.display = 'block';
@@ -565,7 +693,7 @@
             products.push(newP);
             renderProducts();
             updateAdminStats();
-            alert('تمت إضافة القطعة بنجاح إلى المتجر الحقيقي!');
+            alert('تمت إضافة القطعة بنجاح للمتجر!');
             document.getElementById('newTitle').value = '';
             document.getElementById('newPrice').value = '';
             document.getElementById('newImg').value = '';
@@ -582,24 +710,28 @@
                 return;
             }
             tbody.innerHTML = '';
-            orders.forEach(o => {
+            orders.forEach((o, index) => {
                 tbody.innerHTML += `
                     <tr>
                         <td>${o.id}</td>
                         <td>${o.customer}</td>
                         <td>${o.payment}</td>
                         <td style="color:var(--primary); font-weight:bold;">${o.total}</td>
-                        <td><span style="background:var(--success); color:#fff; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${o.status}</span></td>
+                        <td>
+                            <span style="font-weight:bold; font-size:0.8rem; margin-left:8px;">${o.status}</span><br>
+                            <button onclick="updateOrderStatusAdmin(${index}, 'جاري الشحن 🚚')" style="background:var(--info); color:#fff; border:none; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:0.75rem; margin-top:4px;">شحن</button>
+                            <button onclick="updateOrderStatusAdmin(${index}, 'تم التوصيل ✅')" style="background:var(--success); color:#fff; border:none; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:0.75rem; margin-top:4px;">توصيل</button>
+                        </td>
                     </tr>
                 `;
             });
         }
 
-        // إدارة النوافذ المنبثقة
         function openModal(id) {
             document.getElementById(id).style.display = 'flex';
             if(id === 'cartModal') renderCart();
             if(id === 'wishlistModal') renderWishlist();
+            if(id === 'profileModal') renderClientOrders();
         }
 
         function closeModal(id) {
@@ -610,3 +742,4 @@
     </script>
 </body>
 </html>
+
