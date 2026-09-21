@@ -3,70 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجري الاحترافي المتكامل - الإصدار الشامل</title>
+    <title>إتقان | متجر ملابس الشتاء والأوتروير</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-body: #0b0f19;
-            --card-bg: #1e293b;
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --accent: #f59e0b;
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --danger: #ef4444;
-            --success: #10b981;
+            --bg-body: #f8f6f0;         /* بيج فاتح هادئ ونظيف */
+            --card-bg: #ffffff;         /* أبيض ناصع للبطاقات */
+            --primary: #8c7a6b;         /* بني ترابى/بيج دافئ للهوية */
+            --primary-hover: #736253;   /* درجة أغمق قليلاً للتحويم */
+            --accent: #b89778;          /* لون مميز للأسعار والخصومات */
+            --text-light: #2c2925;      /* نص داكن وواضح على الخلفية الفاتحة */
+            --text-muted: #78716c;      /* نص رمادي دافئ ثانوي */
+            --border: #e6dfd5;          /* إطار ناعم ومتناسق */
+            --danger: #dc2626;          /* أحمر للحذف */
+            --success: #16a34a;         /* أخضر للنجاح */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
 
         /* الهيدر */
-        header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 8px; letter-spacing: 1px; }
         .search-bar { flex: 0 1 400px; display: flex; background: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-        .search-bar input { width: 100%; padding: 8px 12px; background: none; border: none; color: white; outline: none; font-size: 0.9rem; }
+        .search-bar input { width: 100%; padding: 8px 12px; background: none; border: none; color: var(--text-light); outline: none; font-size: 0.9rem; }
+        .search-bar input::placeholder { color: var(--text-muted); }
         .search-bar button { background: none; border: none; color: var(--text-muted); padding: 0 12px; cursor: pointer; }
         
         .header-actions { display: flex; gap: 12px; align-items: center; }
-        .icon-btn { background: var(--border); border: none; color: var(--text-light); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; transition: 0.2s; }
-        .icon-btn:hover { background: var(--primary); }
-        .badge { position: absolute; top: -3px; right: -3px; background: var(--accent); color: #000; font-size: 0.7rem; font-weight: bold; border-radius: 50%; padding: 2px 6px; }
+        .icon-btn { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-light); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; transition: 0.2s; }
+        .icon-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .badge { position: absolute; top: -3px; right: -3px; background: var(--primary); color: #fff; font-size: 0.7rem; font-weight: bold; border-radius: 50%; padding: 2px 6px; }
 
         /* المحتوى العام */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; width: 100%; flex: 1; }
-        .hero { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); padding: 40px; border-radius: 16px; margin-bottom: 25px; text-align: center; }
-        .hero h2 { font-size: 2rem; margin-bottom: 10px; }
-        .hero p { font-size: 1rem; opacity: 0.9; }
+        .hero { background: linear-gradient(135deg, #eaddcf, #d4c5b2); color: #2c2925; padding: 40px; border-radius: 16px; margin-bottom: 25px; text-align: center; border: 1px solid var(--border); }
+        .hero h2 { font-size: 2rem; margin-bottom: 10px; font-weight: 800; letter-spacing: 0.5px; }
+        .hero p { font-size: 1rem; opacity: 0.85; }
 
         /* الفلاتر والأقسام */
         .filters-section { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
         .filter-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-light); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; transition: 0.2s; }
-        .filter-btn.active, .filter-btn:hover { background: var(--primary); border-color: var(--primary); }
+        .filter-btn.active, .filter-btn:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
 
-        .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; border-right: 4px solid var(--primary); padding-right: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; border-right: 4px solid var(--primary); padding-right: 10px; display: flex; justify-content: space-between; align-items: center; color: var(--text-light); }
 
         /* شبكة المنتجات */
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         @media(min-width: 768px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
 
-        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; position: relative; }
-        .product-card:hover { transform: translateY(-4px); }
-        .product-img { width: 100%; height: 160px; object-fit: cover; background: #2a3441; cursor: pointer; }
+        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, box-shadow 0.2s; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
+        .product-img { width: 100%; height: 180px; object-fit: cover; background: #eee; cursor: pointer; }
         .product-info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .product-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; cursor: pointer; }
+        .product-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; cursor: pointer; color: var(--text-light); }
         .product-title:hover { color: var(--primary); }
-        .product-price { font-size: 1rem; font-weight: 800; color: var(--accent); margin-bottom: 10px; }
+        .product-price { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
         
-        .btn { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; width: 100%; text-align: center; transition: background 0.2s; }
+        .btn { background: var(--primary); color: white; border: none; padding: 9px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; width: 100%; text-align: center; transition: background 0.2s; }
         .btn:hover { background: var(--primary-hover); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-light); }
-        .btn-outline:hover { background: var(--border); }
 
         /* المودال والنافذة المنبثقة */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 300; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(44,41,37,0.5); backdrop-filter: blur(3px); z-index: 300; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
 
         /* تفاصيل المنتج */
@@ -76,17 +75,18 @@
         /* لوحة التحكم (Admin) */
         .admin-section { display: none; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 10px; text-align: center; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .stat-card h4 { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
-        .stat-card p { font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+        .stat-card p { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        th, td { padding: 10px; text-align: right; border-bottom: 1px solid var(--border); }
+        th, td { padding: 10px; text-align: right; border-bottom: 1px solid var(--border); color: var(--text-light); }
         th { color: var(--text-muted); }
 
         .form-group { margin-bottom: 12px; text-align: right; }
         .form-group label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-muted); }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 0.9rem; outline: none; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; color: var(--text-light); font-size: 0.9rem; outline: none; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
 
         footer { background: var(--card-bg); border-top: 1px solid var(--border); padding: 20px; text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 40px; }
     </style>
@@ -95,9 +95,9 @@
 
     <!-- الهيدر -->
     <header>
-        <h1 class="logo" onclick="switchView('store')"><i class="fa-solid fa-store"></i> متجري الشامل</h1>
+        <h1 class="logo" onclick="switchView('store')"><i class="fa-solid fa-shirt"></i> إتــقــان</h1>
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="ابحث عن منتج..." oninput="filterProducts()">
+            <input type="text" id="searchInput" placeholder="ابحث عن قطعة شتوية..." oninput="filterProducts()">
             <button><i class="fa-solid fa-search"></i></button>
         </div>
         <div class="header-actions">
@@ -110,26 +110,26 @@
     <!-- المحتوى الرئيسي (المتجر) -->
     <div class="container" id="storeView">
         <div class="hero">
-            <h2>مرحباً بك في وجهتك الأولى للتسوق</h2>
-            <p>اكتشف آلاف المنتجات التقنية والإلكترونية بأفضل الأسعار وضمان الجودة.</p>
+            <h2>براند إتقان للأوتروير والملابس الشتوية</h2>
+            <p>أناقة الشتاء الفاخرة، تصاميم متقنة وتفاصيل تناسب ذوقك الرفيع.</p>
         </div>
 
         <!-- فئات المنتجات -->
         <div class="filters-section" id="filtersContainer">
-            <button class="filter-btn active" onclick="setCategory('all', this)">الكل</button>
-            <button class="filter-btn" onclick="setCategory('audio', this)">الصوتيات</button>
-            <button class="filter-btn" onclick="setCategory('gaming', this)">الألعاب والملحقات</button>
-            <button class="filter-btn" onclick="setCategory('smart', this)">الأجهزة الذكية</button>
+            <button class="filter-btn active" onclick="setCategory('all', this)">كل المنتجات</button>
+            <button class="filter-btn" onclick="setCategory('hoodies', this)">هودي وكات بوينت</button>
+            <button class="filter-btn" onclick="setCategory('jackets', this)">جاكيتات ومعاطف</button>
+            <button class="filter-btn" onclick="setCategory('accessories', this)">مستلزمات شتوية</button>
         </div>
 
-        <div class="section-title"><span>المنتجات المتاحة</span> <span id="productsCount" style="font-size:0.85rem; color:var(--text-muted);"></span></div>
+        <div class="section-title"><span>تشكيلة الموسم</span> <span id="productsCount" style="font-size:0.85rem; color:var(--text-muted);"></span></div>
         <div class="products-grid" id="productsGrid"></div>
     </div>
 
     <!-- لوحة التحكم (Admin Dashboard) -->
     <div class="container admin-section" id="adminView">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2>لوحة تحكم المدير (Admin Dashboard)</h2>
+            <h2>لوحة تحكم براند إتقان</h2>
             <button class="btn" style="width:auto;" onclick="switchView('store')">العودة للمتجر</button>
         </div>
 
@@ -143,30 +143,30 @@
                 <p id="totalOrders">0</p>
             </div>
             <div class="stat-card">
-                <h4>إجمالي المنتجات</h4>
+                <h4>إجمالي القطع</h4>
                 <p id="totalProductsCount">0</p>
             </div>
         </div>
 
-        <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:12px; margin-bottom:20px;">
-            <h3 style="margin-bottom:15px; font-size:1rem;">إضافة منتج جديد</h3>
+        <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:12px; margin-bottom:20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">إضافة قطعة شتوية جديدة</h3>
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
-                <div class="form-group"><input type="text" id="newTitle" placeholder="اسم المنتج"></div>
+                <div class="form-group"><input type="text" id="newTitle" placeholder="اسم المنتج (مثال: هودي إتقان الثقيل)"></div>
                 <div class="form-group"><input type="number" id="newPrice" placeholder="السعر (درهم)"></div>
                 <div class="form-group"><input type="text" id="newImg" placeholder="رابط صورة المنتج"></div>
                 <div class="form-group">
                     <select id="newCategory">
-                        <option value="audio">الصوتيات</option>
-                        <option value="gaming">الألعاب والملحقات</option>
-                        <option value="smart">الأجهزة الذكية</option>
+                        <option value="hoodies">هودي وكات بوينت</option>
+                        <option value="jackets">جاكيتات ومعاطف</option>
+                        <option value="accessories">مستلزمات شتوية</option>
                     </select>
                 </div>
             </div>
-            <button class="btn" style="margin-top:10px;" onclick="addNewProduct()">إضافة المنتج للنظام</button>
+            <button class="btn" style="margin-top:10px;" onclick="addNewProduct()">إضافة القطعة للمتجر</button>
         </div>
 
-        <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:12px;">
-            <h3 style="margin-bottom:15px; font-size:1rem;">إدارة الطلبات الحالية</h3>
+        <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <h3 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">إدارة الطلبات الواردة</h3>
             <table>
                 <thead>
                     <tr>
@@ -184,21 +184,21 @@
     </div>
 
     <footer>
-        جميع الحقوق محفوظة © 2026 - نظام المتجر المتكامل الشامل
+        جميع الحقوق محفوظة © 2026 - براند إتقان (Itqan Outerwear)
     </footer>
 
     <!-- نافذة السلة -->
     <div class="modal" id="cartModal">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3>سلة الشراء</h3>
+                <h3 style="color:var(--text-light);">سلة التسوق</h3>
                 <button class="close-modal" onclick="closeModal('cartModal')">✕</button>
             </div>
             <div id="cartItemsList" style="margin-bottom:15px; max-height:250px; overflow-y:auto;"></div>
-            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.05rem; margin-bottom:15px;">
-                <span>المجموع الكلي:</span> <span id="cartTotal" style="color:var(--accent);">0 درهم</span>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.05rem; margin-bottom:15px; color:var(--text-light);">
+                <span>المجموع الكلي:</span> <span id="cartTotal" style="color:var(--primary);">0 درهم</span>
             </div>
-            <button class="btn" onclick="checkout()">إتمام الطلب ودفع آمن</button>
+            <button class="btn" onclick="checkout()">إتمام الطلب وتأكيد الشراء</button>
         </div>
     </div>
 
@@ -206,7 +206,7 @@
     <div class="modal" id="wishlistModal">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3>المنتجات المفضلة</h3>
+                <h3 style="color:var(--text-light);">القطع المفضلة</h3>
                 <button class="close-modal" onclick="closeModal('wishlistModal')">✕</button>
             </div>
             <div id="wishlistItemsList"></div>
@@ -224,12 +224,12 @@
     </div>
 
     <script>
-        // قاعدة البيانات الأولية للمنتجات
+        // قاعدة البيانات الأولية الخاصة ببراند إتقان للأوتروير
         let products = [
-            { id: 1, name: "سماعات رأس لاسلكية احترافية", price: 250, category: "audio", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500", desc: "سماعات عالية الأداء مع عزل ضوضاء نشط وبطارية تدوم طويلاً." },
-            { id: 2, name: "ساعة ألعاب ذكية متطورة", price: 450, category: "smart", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500", desc: "ساعة ذكية متكاملة لتتبع اللياقة البدنية ومعدل نبضات القلب." },
-            { id: 3, name: "ماوس ألعاب لاسلكي ميكانيكي", price: 180, category: "gaming", img: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500", desc: "ماوس خفيف الوزن مع حساس بصري فائق الدقة وسرعة استجابة عالية." },
-            { id: 4, name: "لوحة مفاتيح ميكانيكية بإضاءة RGB", price: 320, category: "gaming", img: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500", desc: "كيبورد ميكانيكي مخصص للاعبين بإضاءة خلفية قابلة للتخصيص بالكامل." }
+            { id: 1, name: "هودي إتقان الثقيل - أبيض ناصع", price: 290, category: "hoodies", img: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500", desc: "هودي شتوي فائق النعومة بتصميم أوتروير عصري وتفاصيل مطرزة بدقة." },
+            { id: 2, name: "معطف إتقان الطويل المبطن - بيج", price: 580, category: "jackets", img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500", desc: "معطف شتوي فاخر مصمم خصيصاً ليمنحك الدفء الكامل مع إطلالة راقية." },
+            { id: 3, name: "جاكيت مبطن مقاوم للرياح", price: 420, category: "jackets", img: "https://images.unsplash.com/photo-1544441893-675973e31985?w=500", desc: "خيارك الأمثل للأجواء الباردة والرحلات الخارجية بتصميم عالي الجودة." },
+            { id: 4, name: "وشاح شتوي فاخر من الصوف", price: 120, category: "accessories", img: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=500", desc: "وشاح ناعم ومريح يكمل إطلالتك الشتوية بلمسة أناقة دافئة." }
         ];
 
         let cart = [];
@@ -240,11 +240,11 @@
         // عرض المنتجات
         function renderProducts(filteredList = products) {
             const grid = document.getElementById('productsGrid');
-            document.getElementById('productsCount').innerText = `(${filteredList.length} منتج)`;
+            document.getElementById('productsCount').innerText = `(${filteredList.length} قطعة)`;
             document.getElementById('totalProductsCount').innerText = products.length;
             
             if(filteredList.length === 0) {
-                grid.innerHTML = '<p style="grid-column: span 4; text-align:center; color:var(--text-muted); padding:30px;">لا توجد منتجات تطابق بحثك</p>';
+                grid.innerHTML = '<p style="grid-column: span 4; text-align:center; color:var(--text-muted); padding:30px;">لا توجد قطع مطابقة للبحث</p>';
                 return;
             }
 
@@ -253,7 +253,7 @@
                 const isFav = wishlist.some(item => item.id === p.id);
                 grid.innerHTML += `
                     <div class="product-card">
-                        <button onclick="toggleWishlist(${p.id})" style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); border:none; color:${isFav ? 'var(--danger)' : '#fff'}; width:30px; height:30px; border-radius:50%; cursor:pointer; z-index:10;"><i class="fa-solid fa-heart"></i></button>
+                        <button onclick="toggleWishlist(${p.id})" style="position:absolute; top:8px; left:8px; background:rgba(255,255,255,0.85); border:1px solid var(--border); color:${isFav ? 'var(--danger)' : 'var(--text-muted)'}; width:30px; height:30px; border-radius:50%; cursor:pointer; z-index:10;"><i class="fa-solid fa-heart"></i></button>
                         <img src="${p.img}" class="product-img" onclick="openProductDetails(${p.id})">
                         <div class="product-info">
                             <div>
@@ -293,10 +293,10 @@
             if(!p) return;
             document.getElementById('productDetailsContent').innerHTML = `
                 <div class="product-details-container">
-                    <img src="${p.img}" style="width:100%; height:220px; object-fit:cover; border-radius:10px;">
+                    <img src="${p.img}" style="width:100%; height:240px; object-fit:cover; border-radius:10px;">
                     <div>
-                        <h2 style="margin-bottom:10px; font-size:1.2rem;">${p.name}</h2>
-                        <div style="color:var(--accent); font-weight:bold; font-size:1.2rem; margin-bottom:10px;">${p.price} درهم</div>
+                        <h2 style="margin-bottom:10px; font-size:1.2rem; color:var(--text-light);">${p.name}</h2>
+                        <div style="color:var(--primary); font-weight:bold; font-size:1.2rem; margin-bottom:10px;">${p.price} درهم</div>
                         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">${p.desc}</p>
                         <button class="btn" onclick="addToCart(${p.id}); closeModal('productModal');">إضافة للسلة الآن</button>
                     </div>
@@ -310,7 +310,7 @@
             const product = products.find(p => p.id === id);
             cart.push(product);
             document.getElementById('cartBadge').innerText = cart.length;
-            alert('تمت إضافة المنتج إلى السلة بنجاح!');
+            alert('تمت إضافة القطعة إلى السلة بنجاح!');
         }
 
         function renderCart() {
@@ -325,10 +325,10 @@
             cart.forEach((item, index) => {
                 total += item.price;
                 list.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-body); padding:8px 12px; border-radius:8px; margin-bottom:8px; font-size:0.85rem;">
-                        <span>${item.name}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-body); padding:8px 12px; border-radius:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border);">
+                        <span style="color:var(--text-light);">${item.name}</span>
                         <div style="display:flex; gap:10px; align-items:center;">
-                            <span style="color:var(--accent); font-weight:bold;">${item.price} د.إ</span>
+                            <span style="color:var(--primary); font-weight:bold;">${item.price} د.إ</span>
                             <button onclick="removeFromCart(${index})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
@@ -348,10 +348,10 @@
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             
             // تسجيل الطلب في لوحة التحكم
-            orders.push({ id: '#' + Math.floor(1000 + Math.random() * 9000), customer: 'عميل زائر', total: total + ' درهم', status: 'قيد التنفيذ' });
+            orders.push({ id: '#' + Math.floor(1000 + Math.random() * 9000), customer: 'عميل براند إتقان', total: total + ' درهم', status: 'قيد التجهيز' });
             updateAdminStats();
 
-            alert('تم إتمام الطلب بنجاح! شكراً لتسوقك معنا.');
+            alert('تم إتمام الطلب بنجاح! شكراً لاختيارك إتقان.');
             cart = [];
             document.getElementById('cartBadge').innerText = '0';
             closeModal('cartModal');
@@ -380,9 +380,9 @@
             list.innerHTML = '';
             wishlist.forEach(item => {
                 list.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-body); padding:8px 12px; border-radius:8px; margin-bottom:8px; font-size:0.85rem;">
-                        <span>${item.name}</span>
-                        <span style="color:var(--accent); font-weight:bold;">${item.price} د.إ</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-body); padding:8px 12px; border-radius:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border);">
+                        <span style="color:var(--text-light);">${item.name}</span>
+                        <span style="color:var(--primary); font-weight:bold;">${item.price} د.إ</span>
                     </div>
                 `;
             });
@@ -415,13 +415,13 @@
             const img = document.getElementById('newImg').value;
             const category = document.getElementById('newCategory').value;
 
-            if(!title || !price || !img) return alert('يرجى ملء جميع بيانات المنتج');
+            if(!title || !price || !img) return alert('يرجى ملء جميع بيانات القطعة الشتوية');
 
-            const newP = { id: products.length + 1, name: title, price: price, category: category, img: img, desc: "منتج جديد أضيف عبر لوحة التحكم." };
+            const newP = { id: products.length + 1, name: title, price: price, category: category, img: img, desc: "قطعة جديدة أضيفت حديثاً لتشكيلة إتقان." };
             products.push(newP);
             renderProducts();
             updateAdminStats();
-            alert('تمت إضافة المنتج بنجاح إلى المتجر!');
+            alert('تمت إضافة القطعة بنجاح إلى المتجر!');
             document.getElementById('newTitle').value = '';
             document.getElementById('newPrice').value = '';
             document.getElementById('newImg').value = '';
@@ -443,8 +443,8 @@
                     <tr>
                         <td>${o.id}</td>
                         <td>${o.customer}</td>
-                        <td style="color:var(--accent);">${o.total}</td>
-                        <td><span style="background:var(--success); color:#000; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${o.status}</span></td>
+                        <td style="color:var(--primary);">${o.total}</td>
+                        <td><span style="background:var(--primary); color:#fff; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${o.status}</span></td>
                     </tr>
                 `;
             });
